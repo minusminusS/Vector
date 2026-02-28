@@ -115,6 +115,23 @@ namespace vectors{
             return c_pointer+1;
         }
 
+        T* find(T value) {
+            for (size_t i = 0; i < c_pointer; i++) {
+                if (c_array[i] == value) {
+                    return c_array+i;
+                }
+            }
+            return c_array+c_pointer;
+        }
+
+        T* begin() {
+            return c_array;
+        }
+
+        T* end() {
+            return c_array+c_pointer;
+        }
+
     };
 }
 
