@@ -9,6 +9,12 @@ using namespace vectors;
 int main() {
     // simple test :>
     vector<int> a;
-    for (int i = 10; i >=0 ; i--) a.push_back(i);
-    for (int i = 0; i < 10; i++) std::cout << a[i] << std::endl;
+    a.reserve(11);
+    for (int i = 10; i >=0 ; i--) {
+        a.push_back(i);
+    }
+    a.erase(9, 2);
+    for (int i = 0; i < a.size(); i++) std::cout << a[i] << std::endl;
+    a.clear();
+
 }

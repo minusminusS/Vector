@@ -19,7 +19,7 @@ namespace vectors{
     class vector {
         T* c_array;
         size_t c_size;
-        size_t c_pointer;
+        long long c_pointer;
 
     public:
 
@@ -27,7 +27,7 @@ namespace vectors{
             size_t tmp = findPowOf2(size);
             c_array = new T[tmp];
             c_size = tmp;
-            c_pointer = size-1;
+            c_pointer = size - 1;
             for (size_t i = 0; i < tmp; i++) {
                 c_array[i] = value;
             }
@@ -60,12 +60,25 @@ namespace vectors{
         // Functions
         // ----------------------
 
+        void reserve(size_t size) {
+            vector<T> tmpV(*this);
+            c_array = new T[size];
+            c_size = size;
+            c_pointer = tmpV.c_pointer;
+            for (size_t i = 0; i < tmpV.c_size; i++) {
+                c_array[i] = tmpV.c_array[i];
+            }
+            for (size_t i = tmpV.c_size; i < size; i++) {
+                c_array[i] = T(0);
+            }
+        }
+
         void resize(size_t size = 0) {
             size_t tmp = findPowOf2(size);
             vector<T> tmpV(*this);
             c_array = new T[tmp];
             c_size = tmp;
-            c_pointer = size-1;
+            c_pointer = size == 0 ? 0 : size-1;
             for (size_t i = 0; i < tmpV.c_size; i++) {
                 c_array[i] = tmpV.c_array[i];
             }
@@ -99,13 +112,34 @@ namespace vectors{
             // In the future I may add a reduction in the size of array
         }
 
+        void erase(size_t pos, size_t count = 1) {
+            if (pos + count - 1 > c_pointer) {
+                std::cerr << "Erase : index out of bounds" << std::endl;
+                return;
+            }
+            for (size_t i = pos + count; i <= c_pointer; i++) {
+                c_array[pos + i - pos - count] = c_array[i];
+            }
+            c_pointer-=count;
+            for (size_t i = c_pointer + 1; i < c_pointer + count + 1; i++) {
+                c_array[i] = T(0);
+            }
+
+        }
+
+        void clear() {
+            c_pointer = 0;
+            c_size = 0;
+            c_array = new T[c_size];
+        }
+
         // ----------------------
         // Getters / Setters
         // ----------------------
 
         T &operator[](size_t index) {
             if (index > c_pointer) {
-                std::cerr << "index out of bounds" << std::endl;
+                std::cerr << "[] : index out of bounds" << std::endl;
                 return c_array[c_pointer];
             }
             return c_array[index];
